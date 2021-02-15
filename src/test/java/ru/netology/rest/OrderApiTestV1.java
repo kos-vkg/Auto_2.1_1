@@ -1,6 +1,7 @@
 package ru.netology.rest;
 
 
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.util.List;
 
@@ -21,18 +24,32 @@ class OrderApiTestV1 {
 
     @BeforeAll
     static void setUpAll() {
-        System.setProperty("webdriver.chrome.driver", "./driver/win/chromedriver.exe");
+       // System.setProperty("webdriver.chrome.driver", "./driver/win/chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
     void setUp() {
         driver = new ChromeDriver();
+///////////////////////////////////////////////////////////
+//            не получилось:
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless", "--disable-gpu", "--window-size=1050,708"
+//                ,"--ignore-certificate-errors","--disable-extensions","--no-sandbox"
+//                ,"--disable-dev-shm-usage");
+//        WebDriver driver = new ChromeDriver(options);
+ /////////////////////////////////////////////
+//        ChromeOptions chromeOptions = new ChromeOptions();
+//        chromeOptions.addArguments("headless", "window-size=1200,600");
+//        WebDriver driver = new ChromeDriver(chromeOptions);
+
     }
 
     @AfterEach
     void tearDown() {
-        driver.quit();
-        driver = null;
+        if(driver != null){
+            driver.quit();
+        }
     }
 
     @Test
@@ -45,5 +62,6 @@ class OrderApiTestV1 {
         form.findElement(By.cssSelector("[type='button']")).click();
         String text = driver.findElement(By.cssSelector("[data-test-id='order-success']")).getText();
         assertEquals("Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.", text.trim());
+
     }
 }
